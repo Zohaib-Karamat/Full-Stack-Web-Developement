@@ -4,8 +4,9 @@
 }
 
 body,html{
-    width: 100%;
-    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    
 }
  /* center through postions */
 
@@ -26,29 +27,31 @@ body,html{
 }
  */
 .main{
-    height: 500px;
-    width: 500px;
+    height: 100%;
+    width: 100%;
     background-color: aqua;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
 }
 .child1{
-    height: 100px;
-    width: 100px;
+    height: 300px;
+    width: 300px;
     background-color: brown;
+    border: 5px solid white;
     
 }
 .child2{
-    height: 100px;
-    width: 100px;
+    height: 300px;
+    width: 300px;
     background-color: yellow;
-    
+    border: 5px solid white;
 }
 
 .child3{
-    height: 100px;
-    width: 100px;
+    height: 300px;
+    width: 300px;
     background-color: green;
-    
+    border: 5px solid white;
 }

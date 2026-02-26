@@ -1,0 +1,45 @@
+*{
+    padding: 0%;
+    margin: 0%;
+}
+html,body{
+    min-width: 100%;
+    min-height: 100%;
+}
+.parent{
+    width: 1600px;
+    height: 1600px;
+    background-color: black;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
+.child{
+    align-self: center;
+    justify-self: center;
+}
+.child1{
+    background-color: blueviolet;
+    height: 200px;
+    width: 200px;
+    border: 3px solid white;
+    
+}
+.child3{
+    background-color: greenyellow;
+    height: 200px;
+    width: 200px;
+    border: 3px solid white;
+}
+.child2{
+    background-color: crimson;
+    height: 200px;
+    width: 200px;
+    border: 3px solid white;
+}
+.child4{
+    background-color: green;
+    height: 200px;
+    width: 200px;
+    border: 3px solid white;
+}
