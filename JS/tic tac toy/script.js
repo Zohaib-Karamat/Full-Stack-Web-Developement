@@ -28,6 +28,7 @@ function initilizeGame() {
 }
 function cellClicked() {
     const cellIndex = this.getAttribute("cellIndex")
+    console.log(cellIndex);
     if (options[cellIndex] != "" || !running) {
         return;
     }
