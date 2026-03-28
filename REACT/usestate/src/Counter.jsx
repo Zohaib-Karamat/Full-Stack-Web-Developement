@@ -28,7 +28,7 @@ export function Counter() {
     return(
         <>  
             <h1>Number: {Number}</h1>
-            <div>
+            <div style={{display:"flex", gap:10}}>
                 <button onClick={increment}>Add</button>
                 <button onClick={decrement}>Subtract</button>
                 <button onClick={reset}>Reset</button>

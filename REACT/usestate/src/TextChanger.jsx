@@ -7,7 +7,7 @@ function TextChanger() {
     }
     return(
         <>
-            <h2>Name: {Text}</h2> 
+            <h1>Name: {Text}</h1> 
             <button onClick={()=>textChanger("Ali")}>Change Name</button>
         </>
     )
