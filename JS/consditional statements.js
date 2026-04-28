@@ -57,11 +57,11 @@ if ("") {
 
 // Real Use in React
 
-{user ? <Profile/>:<Login/> }
+// {user ? <Profile/>:<Login/> }
 // Same as:
 
-if (user) {
-  return <Profile />;
-} else {
-  return <Login />;
-}
+// if (user) {
+//   return <Profile />;
+// } else {
+//   return <Login />;
+// }

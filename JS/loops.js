@@ -16,10 +16,18 @@ do {
     i++;
 } while (i > 5)
 
+
+const myIterable = {
+  *[Symbol.iterator]() {
+    yield "Hello";
+    yield "World";
+  }
+};
+
 // for...of (arrays)    Use to iterate arrays or iterable objects
 const nums =[100,200,300];
-for (let num of nums) {
-    console.log(num)
+for (let num of myIterable) {
+    console.log("myIterable"+num)
 }
 
 // for...in (objects)     Used to iterate over object keys
@@ -28,7 +36,7 @@ const user = {
     age: 20
 }
 for (let naam in user) {
-    console.log(naam,user[naam]);
+    console.log("hello"+naam,user[naam]);
 }
 // ✅ 6. break and continue (Control Flow)
 
