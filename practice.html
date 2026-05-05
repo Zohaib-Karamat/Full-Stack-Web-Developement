@@ -1,0 +1,134 @@
+# HTML & CSS Interview Questions and Answers
+
+## Q1: Difference between inline, block, and inline-block
+
+**Answer:**
+
+* Inline: Takes only required width, cannot set width/height (e.g., span)
+* Block: Takes full width, starts on new line (e.g., div)
+* Inline-block: Behaves like inline but allows width/height
+
+---
+
+## Q2: What is CSS Box Model?
+
+**Answer:**
+It consists of:
+
+* Content
+* Padding
+* Border
+* Margin
+
+---
+
+## Q3: display: none vs visibility: hidden
+
+**Answer:**
+
+* display: none → removes element from layout
+* visibility: hidden → hides element but keeps space
+
+---
+
+## Q4: margin: auto vs text-align: center
+
+**Answer:**
+
+* margin: auto → centers block elements horizontally
+* text-align: center → centers inline content
+
+---
+
+## Q5: What is z-index?
+
+**Answer:**
+Controls stacking order. Works only on positioned elements (not static).
+
+---
+
+## Q6: position: absolute relative to what?
+
+**Answer:**
+Relative to nearest positioned ancestor, otherwise body.
+
+---
+
+## Q7: Why absolute not working?
+
+**Answer:**
+Parent does not have position set (relative/absolute/fixed/sticky).
+
+---
+
+## Q8: fixed vs sticky
+
+**Answer:**
+
+* fixed: always fixed to viewport
+* sticky: acts relative until scroll, then fixed
+
+---
+
+## Q9: Flexbox vs Grid
+
+**Answer:**
+
+* Flexbox: 1D layout (row or column)
+* Grid: 2D layout (rows and columns)
+
+---
+
+## Q10: Center div horizontally and vertically
+
+**Answer:**
+Using flexbox:
+
+```
+.parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+
+---
+
+## Q11: box-sizing: border-box
+
+**Answer:**
+Includes padding and border in total width/height.
+
+---
+
+## Q12: Sticky navbar
+
+**Answer:**
+Use position: fixed or sticky (top: 0)
+
+---
+
+## Q13: Overflow issue
+
+**Answer:**
+Padding adds extra width when using default box model.
+
+---
+
+## Q14: id vs class
+
+**Answer:**
+
+* id: unique, higher specificity
+* class: reusable, recommended
+
+---
+
+## Q15: CSS Specificity
+
+**Answer:**
+Priority order: inline > id > class > element
+
+---
+
+# End of Document

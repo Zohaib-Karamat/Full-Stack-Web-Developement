@@ -30,17 +30,17 @@ body,html{
     height: 100%;
     width: 100%;
     background-color: aqua;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+    
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+
 }
 .child1{
     height: 300px;
     width: 300px;
     background-color: brown;
     border: 5px solid white;
-    
 }
 .child2{
     height: 300px;
@@ -49,9 +49,16 @@ body,html{
     border: 5px solid white;
 }
 
+
+
 .child3{
     height: 300px;
     width: 300px;
     background-color: green;
     border: 5px solid white;
 }
+
+
+
+
+
