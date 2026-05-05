@@ -3,3 +3,5 @@ function Greetings(params) {
         params.isLogIn?<h2>Welcome {params.user} here! </h2> : <h2>Please Login to continue</h2>
     )
 }
+
+export default Greetings
