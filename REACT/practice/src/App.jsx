@@ -9,14 +9,29 @@ import axios from 'axios';
 function App() {
   const [data, setdata] = useState([])
 
-  useEffect(() => {
-    axios.get("https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json")
-      .then((response) => {
-        setdata(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+  // useEffect(() => {
+  //   axios.get("https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json")
+  //     .then((response) => {
+  //       setdata(response.data)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error)
+  //     })
+  // }, [])
+
+
+  useEffect(()=>{
+    fetch("https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json")
+    .then ((response)=>{
+      return response.json()
+    })
+    .then((data)=>{
+      setdata(data)
+    })
+    .catch((error)=>{
+      console.log(error)
+
+    })
   }, [])
 
   return (
