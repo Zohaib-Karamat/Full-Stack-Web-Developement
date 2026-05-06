@@ -26,6 +26,7 @@ function App() {
       return response.json()
     })
     .then((data)=>{
+      console.log(data)
       setdata(data)
     })
     .catch((error)=>{
