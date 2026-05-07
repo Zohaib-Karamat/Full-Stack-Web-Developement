@@ -1,0 +1,29 @@
+.note-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 8px 18px -14px rgba(15, 23, 42, 0.35);
+  color: #0f172a;
+  min-height: 120px;
+  padding: 16px 18px;
+  width: min(320px, 92vw);
+}
+
+.note-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.note-desc {
+  color: #475569;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .note-card {
+    width: min(100%, 92vw);
+  }
+}
