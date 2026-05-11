@@ -1,4 +1,6 @@
+import { create } from "domain";
 import fs from "fs/promises";
+import { createServer } from "http";
 
 // READ FILE
 async function readFileData() {
@@ -79,3 +81,16 @@ async function start() {
 }
 
 start();
+const hostname = '127.0.0.1';
+const port = 3000;
+
+const app = createServer((req,res)=>{
+    res.statusCode = 200;
+    res.end("Hello World. Welcome to First Node Project");
+
+})
+
+
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
