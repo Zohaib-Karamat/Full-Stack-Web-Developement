@@ -3,10 +3,11 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";    
 import route from "./routes/userRoute.js";
+import cors from "cors"
 
 
 const app = express();
-
+app.use(cors({ origin: "http://localhost:5173" }));
 app.use(bodyParser.json())
 dotenv.config();
 // dotenv.config({quiet:"true"});     //  use it when you not want to receive logs about env
