@@ -9,13 +9,15 @@ import route from "./routes/productRoute.js"
 const app = express()
 app.use(bodyParser.json())
 dotenv.config()
+app.set("view engine", "ejs")
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL || 7000;
 
 mongoose    
-    .connect(MONGO_URL)
-    .then(() => {
-        console.log("DB connected successfuly")
+.connect(MONGO_URL)
+.then(() => {
+    console.log("DB connected successfuly")
+    
         app.listen(PORT,()=>{
         console.log(`App is running on PORT: ${PORT}`)
     })
@@ -23,6 +25,5 @@ mongoose
     .catch((err) => {
         console.log(err)
     })
-
     
 app.use("/api",route)
