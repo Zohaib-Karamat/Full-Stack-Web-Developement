@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import './App.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || ''
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 
 const initialValues = {
   name: '',
@@ -19,6 +20,47 @@ const clearStoredToken = () => {
   sessionStorage.removeItem('token')
 }
 
+const loadGoogleIdentityScript = () =>
+  new Promise((resolve, reject) => {
+    const existingScript = document.getElementById('google-identity-script')
+
+    if (existingScript) {
+      if (existingScript.dataset.loaded === 'true' || window.google?.accounts?.id) {
+        resolve()
+        return
+      }
+
+      const handleLoad = () => {
+        existingScript.dataset.loaded = 'true'
+        existingScript.removeEventListener('load', handleLoad)
+        existingScript.removeEventListener('error', handleError)
+        resolve()
+      }
+
+      const handleError = () => {
+        existingScript.removeEventListener('load', handleLoad)
+        existingScript.removeEventListener('error', handleError)
+        reject(new Error('Unable to load Google sign-in.'))
+      }
+
+      existingScript.addEventListener('load', handleLoad)
+      existingScript.addEventListener('error', handleError)
+      return
+    }
+
+    const script = document.createElement('script')
+    script.id = 'google-identity-script'
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = () => {
+      script.dataset.loaded = 'true'
+      resolve()
+    }
+    script.onerror = () => reject(new Error('Unable to load Google sign-in.'))
+    document.body.appendChild(script)
+  })
+
 function App() {
   const [mode, setMode] = useState('login')
   const [values, setValues] = useState(initialValues)
@@ -27,6 +69,9 @@ function App() {
   const [isProfileLoading, setIsProfileLoading] = useState(false)
   const [authToken, setAuthToken] = useState(getStoredToken)
   const [user, setUser] = useState(null)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isGoogleReady, setIsGoogleReady] = useState(false)
+  const googleButtonRef = useRef(null)
   const isLogin = mode === 'login'
 
   const switchMode = (nextMode) => {
@@ -101,6 +146,39 @@ function App() {
     }
   }
 
+  const handleGoogleLogin = useCallback(async (idToken) => {
+    setStatus(null)
+    setIsGoogleLoading(true)
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idToken }),
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Google login failed.')
+      }
+
+      if (data.token) {
+        const storage = values.remember ? localStorage : sessionStorage
+        storage.setItem('token', data.token)
+        setAuthToken(data.token)
+      } else {
+        throw new Error('Token missing from Google login response.')
+      }
+
+      setStatus({ type: 'success', message: 'Login successful.' })
+    } catch (error) {
+      setStatus({ type: 'error', message: error.message || 'Google login failed.' })
+    } finally {
+      setIsGoogleLoading(false)
+    }
+  }, [values.remember])
+
   const loadProfile = async (tokenValue) => {
     if (!tokenValue) return
     setIsProfileLoading(true)
@@ -142,6 +220,53 @@ function App() {
     }
   }, [authToken])
 
+  useEffect(() => {
+    if (user) return
+    if (!GOOGLE_CLIENT_ID) return
+
+    let isMounted = true
+
+    loadGoogleIdentityScript()
+      .then(() => {
+        if (!isMounted) return
+
+        const googleAccounts = window.google?.accounts?.id
+
+        if (!googleAccounts || !googleButtonRef.current) {
+          throw new Error('Google sign-in is not available.')
+        }
+
+        googleAccounts.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: (response) => {
+            if (!response?.credential) {
+              setStatus({ type: 'error', message: 'Google sign-in was cancelled.' })
+              return
+            }
+            handleGoogleLogin(response.credential)
+          },
+        })
+
+        googleButtonRef.current.innerHTML = ''
+        googleAccounts.renderButton(googleButtonRef.current, {
+          theme: 'outline',
+          size: 'large',
+          shape: 'pill',
+          text: 'continue_with',
+          width: 320,
+        })
+        setIsGoogleReady(true)
+      })
+      .catch((error) => {
+        if (!isMounted) return
+        setStatus({ type: 'error', message: error.message || 'Google sign-in unavailable.' })
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [user, GOOGLE_CLIENT_ID, handleGoogleLogin])
+
   const profileInitials = user?.name
     ? user.name
         .trim()
@@ -152,6 +277,7 @@ function App() {
         .slice(0, 2)
         .toUpperCase()
     : 'AU'
+  const profileAvatar = user?.avatar ? user.avatar.trim() : ''
 
   return (
     <div className="page">
@@ -205,7 +331,13 @@ function App() {
           {user ? (
             <div className="profile">
               <div className="profile-header">
-                <div className="avatar" aria-hidden="true">{profileInitials}</div>
+                <div className="avatar">
+                  {profileAvatar ? (
+                    <img src={profileAvatar} alt={`${user?.name || 'User'} avatar`} />
+                  ) : (
+                    <span aria-hidden="true">{profileInitials}</span>
+                  )}
+                </div>
                 <div>
                   <p className="profile-title">Welcome back,</p>
                   <h2>{user.name || 'Authenticated user'}</h2>
@@ -365,9 +497,25 @@ function App() {
                   <span>or</span>
                 </div>
 
-                <button type="button" className="ghost" disabled={isLoading}>
-                  Continue with Google
-                </button>
+                <div className="google-wrapper">
+                  {GOOGLE_CLIENT_ID ? (
+                    <div
+                      className="google-button"
+                      ref={googleButtonRef}
+                      aria-busy={isGoogleLoading}
+                    />
+                  ) : (
+                    <button type="button" className="ghost" disabled>
+                      Set VITE_GOOGLE_CLIENT_ID to enable Google sign-in
+                    </button>
+                  )}
+                  {isGoogleLoading && (
+                    <span className="google-status">Contacting Google...</span>
+                  )}
+                  {!isGoogleReady && GOOGLE_CLIENT_ID && !isGoogleLoading && (
+                    <span className="google-status">Loading Google sign-in...</span>
+                  )}
+                </div>
 
                 <p className="footnote">
                   By continuing you agree to our Terms and Privacy Policy.
