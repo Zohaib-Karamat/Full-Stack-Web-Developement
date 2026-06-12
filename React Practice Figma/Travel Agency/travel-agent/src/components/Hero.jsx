@@ -5,6 +5,8 @@ import heroIllustration from '../assets/hero.svg'
 import Category from './Category'
 import Destinations from './Destinations'
 import Booking from './Booking'
+import Testimonials from './Testimonials'
+import Logos from './Logos'
 
 function Hero() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -130,6 +132,10 @@ function Hero() {
       <Destinations />
 
       <Booking />
+
+      <Testimonials />
+
+      <Logos />
     </main>
   )
 }
