@@ -36,7 +36,7 @@ function Category() {
         </h2>
       </div>
 
-      <div className="hero-category-grid">
+      <div className="hero-category-grid ">
         {categories.map((item) => (
           <article key={item.title} className="category-card">
             <span className="category-icon" aria-hidden="true">

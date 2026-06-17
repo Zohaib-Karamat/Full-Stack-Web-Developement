@@ -7,6 +7,8 @@ import Destinations from './Destinations'
 import Booking from './Booking'
 import Testimonials from './Testimonials'
 import Logos from './Logos'
+import Subscribe from './Subscribe'
+import Footer from './Footer'
 
 function Hero() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -136,6 +138,10 @@ function Hero() {
       <Testimonials />
 
       <Logos />
+
+      <Subscribe />
+
+      <Footer />
     </main>
   )
 }

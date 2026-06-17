@@ -1,0 +1,52 @@
+.logos-section {
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.logos-container {
+  max-width: 1100px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.logo-item {
+  padding: 20px 30px;
+  border-radius: 10px;
+  background-color: transparent;
+  box-shadow: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 180px;
+}
+
+.logo-item:hover {
+  background-color: white;
+  box-shadow: 0px 1.85px 3.15px 0px rgba(0,0,0,0.00), 0px 8.15px 6.52px 0px rgba(0,0,0,0.01), 0px 20px 13px 0px rgba(0,0,0,0.01), 0px 38.52px 25.48px 0px rgba(0,0,0,0.01), 0px 64.81px 46.85px 0px rgba(0,0,0,0.02), 0px 100px 80px 0px rgba(0,0,0,0.02);
+}
+
+.logo-image {
+  max-height: 40px;
+  max-width: 120px;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(0) opacity(60%);
+  transition: all 0.3s ease;
+}
+
+.logo-item:hover .logo-image {
+  filter: none;
+}
+
+@media (max-width: 768px) {
+  .logos-container {
+    justify-content: center;
+  }
+}
