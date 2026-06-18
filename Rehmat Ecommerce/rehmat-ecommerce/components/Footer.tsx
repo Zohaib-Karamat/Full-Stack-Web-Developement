@@ -1,14 +1,15 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white pt-20 pb-6 w-full mt-24">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer className="mt-16 w-full bg-black pb-6 pt-14 text-white sm:mt-24 sm:pt-20">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-8 lg:px-8">
         
         {/* Column 1 */}
         <div className="flex flex-col gap-4 font-poppins text-sm">
-          <Link href="/" className="text-2xl font-bold font-inter tracking-wider mb-2">
-            Exclusive
+          <Link href="/" className="mb-2 bg-white rounded-md w-fit p-1">
+            <Image src="/logo.png" alt="Rehmat Ecom Logo" width={100} height={100} className="object-contain w-20 sm:w-24" />
           </Link>
           <p className="font-medium text-base mb-1">Subscribe</p>
           <p>Get 10% off your first order</p>
@@ -52,36 +53,50 @@ export default function Footer() {
         </div>
 
         {/* Column 5 */}
-        <div className="flex flex-col gap-4 font-poppins text-sm">
-          <h3 className="font-medium text-lg font-inter mb-2">Download App</h3>
-          <p className="text-xs opacity-70">Save $3 with App New User Only</p>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="w-20 h-20 bg-white p-1 rounded-sm">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://placehold.co/80x80?text=QR" alt="QR Code" className="w-full h-full object-cover" />
+        <div className="flex flex-col gap-3 font-poppins text-sm">
+          <h3 className="mb-1 font-inter text-lg font-medium">Download App</h3>
+          <p className="text-[11px] font-medium text-white/60">Save $3 with App New User Only</p>
+
+          <div className="flex items-center gap-2">
+            <div aria-label="Dummy QR code" className="grid h-[76px] w-[76px] grid-cols-5 grid-rows-5 gap-1 bg-white p-1">
+              {Array.from({ length: 25 }).map((_, index) => (
+                <span
+                  key={index}
+                  className={[
+                    0, 1, 3, 4, 5, 7, 9, 10, 11, 13, 15, 16, 18, 19, 20, 22, 24,
+                  ].includes(index) ? "bg-black" : "bg-white"}
+                />
+              ))}
             </div>
-            <div className="flex flex-col gap-2 h-20">
-              <div className="flex-1 bg-white p-1 rounded-sm overflow-hidden flex items-center justify-center">
-                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="https://placehold.co/110x30?text=Google+Play" alt="Google Play" className="max-w-full max-h-full" />
-              </div>
-              <div className="flex-1 bg-white p-1 rounded-sm overflow-hidden flex items-center justify-center">
-                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="https://placehold.co/110x30?text=App+Store" alt="App Store" className="max-w-full max-h-full" />
-              </div>
+
+            <div className="flex h-[76px] flex-col justify-between">
+              <a href="#" className="flex h-[34px] w-[110px] items-center gap-2 rounded border border-white/70 bg-black px-2 text-white">
+                <span className="grid h-5 w-5 place-items-center rounded-sm border border-white/50 text-[10px]">▶</span>
+                <span className="leading-none">
+                  <span className="block text-[7px]">GET IT ON</span>
+                  <span className="block text-[12px] font-semibold">Google Play</span>
+                </span>
+              </a>
+              <a href="#" className="flex h-[34px] w-[110px] items-center gap-2 rounded border border-white/70 bg-black px-2 text-white">
+                <span className="text-lg leading-none">●</span>
+                <span className="leading-none">
+                  <span className="block text-[7px]">Download on the</span>
+                  <span className="block text-[12px] font-semibold">App Store</span>
+                </span>
+              </a>
             </div>
           </div>
-          <div className="flex items-center gap-6 mt-4">
-            {/* Social Icons Placeholders */}
-            <div className="w-6 h-6 border rounded-full"></div>
-            <div className="w-6 h-6 border rounded-full"></div>
-            <div className="w-6 h-6 border rounded-full"></div>
-            <div className="w-6 h-6 border rounded-full"></div>
+
+          <div className="mt-3 flex items-center gap-6 text-white">
+            <a href="#" aria-label="Facebook" className="text-lg leading-none hover:text-red-400">f</a>
+            <a href="#" aria-label="Twitter" className="text-lg leading-none hover:text-red-400">𝕏</a>
+            <a href="#" aria-label="Instagram" className="grid h-5 w-5 place-items-center rounded-md border border-white text-xs hover:text-red-400">◎</a>
+            <a href="#" aria-label="LinkedIn" className="text-sm font-semibold leading-none hover:text-red-400">in</a>
           </div>
         </div>
 
       </div>
-      <div className="w-full border-t border-gray-800 mt-16 pt-6 flex justify-center items-center opacity-40">
+      <div className="mt-12 flex w-full items-center justify-center border-t border-gray-800 px-4 pt-6 text-center opacity-40 sm:mt-16">
         <p className="font-poppins text-sm">© Copyright Rimel 2022. All right reserved</p>
       </div>
     </footer>

@@ -14,8 +14,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Exclusive | E-commerce",
-  description: "Senior frontend developer implementation of Exclusive landing page",
+  title: "Rehmat Ecom | E-commerce",
+  description: "Senior frontend developer implementation of Rehmat Ecom landing page",
 };
 
 export default function RootLayout({
