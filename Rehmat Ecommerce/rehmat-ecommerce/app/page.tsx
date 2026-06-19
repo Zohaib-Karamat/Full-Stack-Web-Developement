@@ -4,6 +4,8 @@ import SectionHeading from "@/components/SectionHeading";
 import ProductCard from "@/components/ProductCard";
 import CategoryCard from "@/components/CategoryCard";
 import Footer from "@/components/Footer";
+import Link from "next/link";
+import { getProducts } from "@/lib/products";
 import {
   MoveLeft,
   MoveRight,
@@ -20,7 +22,16 @@ import {
 
 import Features from "@/components/Features";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const products = await getProducts();
+  const flashProducts = products.slice(0, 4);
+  const bestSellingProducts = [...products]
+    .sort((a, b) => b.reviewCount - a.reviewCount)
+    .slice(0, 4);
+  const exploreProducts = products.slice(8, 16);
+
   return (
     <div className="w-full min-h-screen bg-white">
       <Header />
@@ -86,47 +97,24 @@ export default function Home() {
           </SectionHeading>
 
           <div className="grid grid-cols-2 gap-4 sm:gap-7 lg:grid-cols-4">
-            <ProductCard
-              title="HAVIT HV-G92 Gamepad"
-              price={120}
-              originalPrice={160}
-              discountPercentage={40}
-              rating={5}
-              reviewCount={88}
-              imageUrl="/products/keyboard.png"
-            />
-            <ProductCard
-              title="AK-900 Wired Keyboard"
-              price={960}
-              originalPrice={1160}
-              discountPercentage={35}
-              rating={4}
-              reviewCount={75}
-              imageUrl="/products/keyboard.png"
-            />
-            <ProductCard
-              title="IPS LCD Gaming Monitor"
-              price={370}
-              originalPrice={400}
-              discountPercentage={30}
-              rating={5}
-              reviewCount={99}
-              imageUrl="/products/monitor.png"
-            />
-            <ProductCard
-              title="S-Series Comfort Chair"
-              price={375}
-              originalPrice={400}
-              discountPercentage={25}
-              rating={4.5}
-              reviewCount={99}
-              imageUrl="/products/duffle-bag.png"
-            />
+            {flashProducts.map((product, index) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                discountPercentage={[40, 35, 30, 25][index]}
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+                imageUrl={product.imageUrl}
+              />
+            ))}
           </div>
           <div className="mt-10 flex justify-center sm:mt-12">
-            <button className="w-full rounded-sm bg-red-500 px-8 py-4 font-poppins font-medium text-white transition-colors hover:bg-red-600 sm:w-auto sm:px-12">
+            <Link href="/products" className="w-full rounded-sm bg-red-500 px-8 py-4 text-center font-poppins font-medium text-white transition-colors hover:bg-red-600 sm:w-auto sm:px-12">
               View All Products
-            </button>
+            </Link>
           </div>
         </section>
 
@@ -174,43 +162,24 @@ export default function Home() {
             subtitle="This Month"
             title="Best Selling Products"
             actionButton={
-              <button className="rounded-sm bg-red-500 px-8 py-3 font-poppins font-medium text-white transition-colors hover:bg-red-600 sm:px-12 sm:py-4">
+              <Link href="/products" className="inline-block rounded-sm bg-red-500 px-8 py-3 font-poppins font-medium text-white transition-colors hover:bg-red-600 sm:px-12 sm:py-4">
                 View All
-              </button>
+              </Link>
             }
           />
           <div className="grid grid-cols-1 justify-items-center gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            <ProductCard
-              title="The north coat"
-              price={260}
-              originalPrice={360}
-              rating={5}
-              reviewCount={65}
-              imageUrl="/products/duffle-bag.png"
-            />
-            <ProductCard
-              title="Gucci duffle bag"
-              price={960}
-              originalPrice={1160}
-              rating={4.5}
-              reviewCount={65}
-              imageUrl="/products/duffle-bag.png"
-            />
-            <ProductCard
-              title="RGB liquid CPU Cooler"
-              price={160}
-              originalPrice={170}
-              rating={4.5}
-              reviewCount={65}
-              imageUrl="/products/monitor.png"
-            />
-            <ProductCard
-              title="Small BookSelf"
-              price={360}
-              rating={5}
-              reviewCount={65}
-              imageUrl="/products/keyboard.png"
-            />
+            {bestSellingProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                title={product.title}
+                price={product.price}
+                originalPrice={product.originalPrice}
+                rating={product.rating}
+                reviewCount={product.reviewCount}
+                imageUrl={product.imageUrl}
+              />
+            ))}
           </div>
         </section>
 

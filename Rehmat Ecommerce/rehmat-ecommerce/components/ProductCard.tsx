@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { Heart, Eye, Star } from "lucide-react";
 
 interface ProductCardProps {
+  id?: string;
   title: string;
   price: number;
   originalPrice?: number;
@@ -12,6 +14,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   title,
   price,
   originalPrice,
@@ -21,10 +24,15 @@ export default function ProductCard({
   reviewCount,
   imageUrl,
 }: ProductCardProps) {
+  const href = id ? `/product-details?id=${id}` : "/product-details";
+
   return (
     <div className="group flex w-full cursor-pointer flex-col gap-4">
       {/* Image Container */}
-      <div className="relative flex h-[250px] w-full items-center justify-center overflow-hidden rounded-sm bg-[#F5F5F5]">
+      <Link
+        href={href}
+        className="relative flex h-[250px] w-full items-center justify-center overflow-hidden rounded-sm bg-[#F5F5F5]"
+      >
         {/* Badges */}
         {discountPercentage && (
           <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-poppins px-3 py-1 rounded-sm">
@@ -39,12 +47,12 @@ export default function ProductCard({
 
         {/* Action Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button className="bg-white p-1.5 rounded-full shadow-sm hover:bg-gray-100 transition-colors">
+          <span className="bg-white p-1.5 rounded-full shadow-sm transition-colors">
             <Heart className="w-5 h-5 text-black" />
-          </button>
-          <button className="bg-white p-1.5 rounded-full shadow-sm hover:bg-gray-100 transition-colors">
+          </span>
+          <span className="bg-white p-1.5 rounded-full shadow-sm transition-colors">
             <Eye className="w-5 h-5 text-black" />
-          </button>
+          </span>
         </div>
 
         {/* Product Image */}
@@ -59,13 +67,15 @@ export default function ProductCard({
         <div className="absolute bottom-0 w-full bg-black py-2 text-center font-poppins font-medium text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
           Add To Cart
         </div>
-      </div>
+      </Link>
 
       {/* Details */}
       <div className="flex flex-col gap-2">
-        <h3 className="text-black font-poppins font-medium text-base truncate">
+        <Link href={href} className="text-black transition-colors hover:text-red-500">
+          <h3 className="font-poppins font-medium text-base truncate">
           {title}
-        </h3>
+          </h3>
+        </Link>
         <div className="flex items-center gap-3 font-poppins font-medium text-base">
           <span className="text-red-500">${price}</span>
           {originalPrice && (

@@ -69,29 +69,33 @@ export default function Footer() {
               ))}
             </div>
 
-            <div className="flex h-[76px] flex-col justify-between">
-              <a href="#" className="flex h-[34px] w-[110px] items-center gap-2 rounded border border-white/70 bg-black px-2 text-white">
-                <span className="grid h-5 w-5 place-items-center rounded-sm border border-white/50 text-[10px]">▶</span>
-                <span className="leading-none">
-                  <span className="block text-[7px]">GET IT ON</span>
-                  <span className="block text-[12px] font-semibold">Google Play</span>
-                </span>
+            <div className="flex h-[80px] flex-col justify-between">
+              <a href="#" className="flex transition-transform hover:scale-105">
+                <Image src="/googleplay.svg" alt="Get it on Google Play" width={120} height={36} className="h-9 w-auto object-contain" />
               </a>
-              <a href="#" className="flex h-[34px] w-[110px] items-center gap-2 rounded border border-white/70 bg-black px-2 text-white">
-                <span className="text-lg leading-none">●</span>
-                <span className="leading-none">
-                  <span className="block text-[7px]">Download on the</span>
-                  <span className="block text-[12px] font-semibold">App Store</span>
+              <a href="#" className="flex h-[36px] w-[120px] items-center gap-2 rounded bg-gradient-to-r from-blue-500 to-indigo-600 px-2 text-white shadow-md transition-all hover:scale-105 hover:shadow-lg hover:from-blue-400 hover:to-indigo-500">
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 384 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.3 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.3zM34.4 104C56.6 77.5 86.4 59.5 119.8 56c5-43.1 31.9-80.4 69.4-104.4C166.4 20.9 135 40 102.6 44.5c-5.7 42.1-32.6 78.4-68.2 100.8z"/></svg>
+                <span className="leading-none text-left">
+                  <span className="block text-[8px] font-medium text-white/90">Download on the</span>
+                  <span className="block text-[13px] font-bold">App Store</span>
                 </span>
               </a>
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-6 text-white">
-            <a href="#" aria-label="Facebook" className="text-lg leading-none hover:text-red-400">f</a>
-            <a href="#" aria-label="Twitter" className="text-lg leading-none hover:text-red-400">𝕏</a>
-            <a href="#" aria-label="Instagram" className="grid h-5 w-5 place-items-center rounded-md border border-white text-xs hover:text-red-400">◎</a>
-            <a href="#" aria-label="LinkedIn" className="text-sm font-semibold leading-none hover:text-red-400">in</a>
+          <div className="mt-6 flex items-center gap-4">
+            <a href="#" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1877F2] text-white transition-transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+            <a href="#" aria-label="Twitter" className="flex h-9 w-9 items-center justify-center rounded-full bg-black border border-gray-700 text-white transition-transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] text-white transition-transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" aria-label="LinkedIn" className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0A66C2] text-white transition-transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
           </div>
         </div>
 
