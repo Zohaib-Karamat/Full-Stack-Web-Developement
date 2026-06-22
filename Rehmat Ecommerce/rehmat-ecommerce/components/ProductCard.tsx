@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Heart, Eye, Star } from "lucide-react";
+import AddToCartButton from "./AddToCartButton";
 
 interface ProductCardProps {
   id?: string;
@@ -64,9 +65,10 @@ export default function ProductCard({
         />
 
         {/* Add to Cart Button (Hover) */}
-        <div className="absolute bottom-0 w-full bg-black py-2 text-center font-poppins font-medium text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
-          Add To Cart
-        </div>
+        <AddToCartButton 
+          productId={id}
+          className="absolute bottom-0 w-full bg-black py-2 text-center font-poppins font-medium text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
+        />
       </Link>
 
       {/* Details */}

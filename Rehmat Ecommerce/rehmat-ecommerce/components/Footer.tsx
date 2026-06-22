@@ -58,16 +58,13 @@ export default function Footer() {
           <p className="text-[11px] font-medium text-white/60">Save $3 with App New User Only</p>
 
           <div className="flex items-center gap-2">
-            <div aria-label="Dummy QR code" className="grid h-[76px] w-[76px] grid-cols-5 grid-rows-5 gap-1 bg-white p-1">
-              {Array.from({ length: 25 }).map((_, index) => (
-                <span
-                  key={index}
-                  className={[
-                    0, 1, 3, 4, 5, 7, 9, 10, 11, 13, 15, 16, 18, 19, 20, 22, 24,
-                  ].includes(index) ? "bg-black" : "bg-white"}
-                />
-              ))}
-            </div>
+            <img 
+              src="/qrcode.png" 
+              alt="QR Code" 
+              width="76" 
+              height="76" 
+              className="h-[76px] w-[76px] bg-white p-1 object-contain" 
+            />
 
             <div className="flex h-[80px] flex-col justify-between">
               <a href="#" className="flex transition-transform hover:scale-105">

@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   description: "Senior frontend developer implementation of Rehmat Ecom landing page",
 };
 
+import { AuthProvider } from "@/components/AuthProvider";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +30,11 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${poppins.variable} font-inter h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   );
 }

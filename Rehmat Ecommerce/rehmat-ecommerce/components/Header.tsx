@@ -4,9 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Heart, Menu, Search, ShoppingCart, User, ShoppingBag, XCircle, Star, LogOut, X } from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut, isLoading } = useAuth();
 
   return (
     <header className="w-full border-b border-gray-200 relative z-50">
@@ -36,7 +38,9 @@ export default function Header() {
           <Link href="/" className="hover:underline underline-offset-4 font-medium">Home</Link>
           <Link href="/contact" className="hover:underline underline-offset-4">Contact</Link>
           <Link href="/about" className="hover:underline underline-offset-4">About</Link>
-          <Link href="/signup" className="hover:underline underline-offset-4">Sign Up</Link>
+          {!user && !isLoading && (
+            <Link href="/signup" className="hover:underline underline-offset-4">Sign Up</Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-3 sm:gap-5">
@@ -60,33 +64,35 @@ export default function Header() {
             </button>
 
             {/* User Account Dropdown */}
-            <div className="relative group hidden sm:block">
-              <button aria-label="User Account" className="flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
-                <User className="w-5 h-5" />
-              </button>
-              
-              {/* Invisible hover bridge */}
-              <div className="absolute top-full right-0 w-full h-4"></div>
-
-              {/* Dropdown Menu */}
-              <div className="absolute right-0 top-[calc(100%+0.5rem)] w-64 bg-black/80 backdrop-blur-md text-white rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col p-2">
-                <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
-                  <User className="w-5 h-5" /> Manage My Account
-                </Link>
-                <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
-                  <ShoppingBag className="w-5 h-5" /> My Order
-                </Link>
-                <Link href="/cancellations" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
-                  <XCircle className="w-5 h-5" /> My Cancellations
-                </Link>
-                <Link href="/reviews" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
-                  <Star className="w-5 h-5" /> My Reviews
-                </Link>
-                <button className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins w-full text-left">
-                  <LogOut className="w-5 h-5" /> Logout
+            {user && (
+              <div className="relative group hidden sm:block">
+                <button aria-label="User Account" className="flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
+                  <User className="w-5 h-5" />
                 </button>
+                
+                {/* Invisible hover bridge */}
+                <div className="absolute top-full right-0 w-full h-4"></div>
+
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 top-[calc(100%+0.5rem)] w-64 bg-black/80 backdrop-blur-md text-white rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 flex flex-col p-2">
+                  <Link href="/account" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
+                    <User className="w-5 h-5" /> Manage My Account
+                  </Link>
+                  <Link href="/orders" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
+                    <ShoppingBag className="w-5 h-5" /> My Order
+                  </Link>
+                  <Link href="/cancellations" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
+                    <XCircle className="w-5 h-5" /> My Cancellations
+                  </Link>
+                  <Link href="/reviews" className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins">
+                    <Star className="w-5 h-5" /> My Reviews
+                  </Link>
+                  <button onClick={signOut} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/20 rounded-sm transition-colors text-sm font-poppins w-full text-left">
+                    <LogOut className="w-5 h-5" /> Logout
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             <button 
               aria-label="Menu" 
@@ -126,13 +132,26 @@ export default function Header() {
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Home</Link>
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Contact</Link>
               <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">About</Link>
-              <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Sign Up</Link>
+              {!user && !isLoading && (
+                <Link href="/signup" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Sign Up</Link>
+              )}
             </nav>
 
             <div className="mt-auto p-4 border-t border-gray-200">
-              <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 hover:text-red-500 transition-colors font-poppins text-base font-medium">
-                <User className="w-5 h-5" /> My Account
-              </Link>
+              {user ? (
+                <>
+                  <Link href="/account" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 hover:text-red-500 transition-colors font-poppins text-base font-medium mb-4">
+                    <User className="w-5 h-5" /> My Account
+                  </Link>
+                  <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 hover:text-red-500 transition-colors font-poppins text-base font-medium w-full text-left">
+                    <LogOut className="w-5 h-5" /> Logout
+                  </button>
+                </>
+              ) : (
+                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 hover:text-red-500 transition-colors font-poppins text-base font-medium">
+                  <User className="w-5 h-5" /> Log In
+                </Link>
+              )}
             </div>
           </div>
         </div>

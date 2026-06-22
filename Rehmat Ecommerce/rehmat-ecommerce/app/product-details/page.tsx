@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import ProductDetailActions from "@/components/ProductDetailActions";
 import Link from "next/link";
 import { getProductById, getProducts } from "@/lib/products";
 import {
@@ -153,25 +154,7 @@ export default async function ProductDetailsPage({
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap items-center gap-4">
-                <div className="flex h-11 overflow-hidden rounded-sm border border-black/50">
-                  <button className="grid w-10 place-items-center border-r border-black/50 hover:bg-neutral-100" aria-label="Decrease quantity">
-                    <Minus className="h-5 w-5" />
-                  </button>
-                  <span className="grid w-20 place-items-center font-poppins text-xl font-medium">1</span>
-                  <button className="grid w-10 place-items-center bg-primary text-white hover:bg-red-600" aria-label="Increase quantity">
-                    <Plus className="h-5 w-5" />
-                  </button>
-                </div>
-
-                <button className="h-11 rounded-sm bg-primary px-12 font-poppins text-base font-medium text-neutral-50 transition-colors hover:bg-red-600">
-                  Buy Now
-                </button>
-
-                <button className="grid h-11 w-11 place-items-center rounded-sm border border-black/50 transition-colors hover:border-primary hover:text-primary" aria-label="Add to wishlist">
-                  <Heart className="h-5 w-5" />
-                </button>
-              </div>
+              <ProductDetailActions productId={product.id} />
 
               <div className="mt-10 overflow-hidden rounded-sm border border-black/50">
                 <div className="flex items-center gap-4 border-b border-black/50 p-4">

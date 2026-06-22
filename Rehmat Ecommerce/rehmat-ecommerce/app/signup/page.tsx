@@ -4,8 +4,46 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+
+      // If email confirmation is off, Supabase auto-logs the user in.
+      // Since you want them to log in manually, we force a logout first.
+      await fetch("/api/auth/logout", { method: "POST" });
+
+      // Redirect to login page
+      router.push("/login");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       <Header />
@@ -37,20 +75,24 @@ export default function SignUpPage() {
               </p>
             </div>
 
-            <form className="flex flex-col gap-10" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-10">
                 <input 
                   type="text" 
                   name="name"
                   placeholder="Name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full border-b border-black/50 pb-2 text-base font-normal font-poppins text-black placeholder:text-black/40 focus:outline-none focus:border-black transition-colors bg-transparent"
                   required
                 />
                 
                 <input 
-                  type="text" 
-                  name="emailOrPhone"
-                  placeholder="Email or Phone Number"
+                  type="email" 
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full border-b border-black/50 pb-2 text-base font-normal font-poppins text-black placeholder:text-black/40 focus:outline-none focus:border-black transition-colors bg-transparent"
                   required
                 />
@@ -59,17 +101,22 @@ export default function SignUpPage() {
                   type="password" 
                   name="password"
                   placeholder="Password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full border-b border-black/50 pb-2 text-base font-normal font-poppins text-black placeholder:text-black/40 focus:outline-none focus:border-black transition-colors bg-transparent"
                   required
                 />
               </div>
 
+              {error && <p className="text-red-500 text-sm font-poppins">{error}</p>}
+
               <div className="flex flex-col gap-4 mt-2">
                 <button 
-                  type="button"
-                  className="w-full bg-red-500 hover:bg-red-600 text-white text-base font-medium font-poppins py-4 rounded-sm transition-colors"
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white text-base font-medium font-poppins py-4 rounded-sm transition-colors"
                 >
-                  Create Account
+                  {loading ? "Creating..." : "Create Account"}
                 </button>
                   
                   <button 
