@@ -66,3 +66,58 @@ export async function createProductRecord(data: any) {
   revalidatePath("/admin/products");
   return { success: true, product };
 }
+
+export async function getAdminProductById(id: string) {
+  const supabase = await createAdminClient();
+  const { data: product, error: productError } = await supabase
+    .from("products")
+    .select("*, product_images(image_url)")
+    .eq("id", id)
+    .single();
+
+  if (productError) throw new Error(productError.message);
+  return product;
+}
+
+export async function updateProductRecord(id: string, data: any) {
+  const supabase = await createAdminClient();
+
+  // 1. Update product
+  const updateData: any = {
+    title: data.title,
+    slug: data.title.toLowerCase().replace(/\s+/g, '-'),
+    description: data.description,
+    price: data.price,
+    stock: data.stock,
+    category_id: data.category_id,
+  };
+  
+  if (data.images && data.images.length > 0) {
+    updateData.featured_image = data.images[0];
+  }
+
+  const { error: productError } = await supabase
+    .from("products")
+    .update(updateData)
+    .eq("id", id);
+
+  if (productError) return { error: productError.message };
+
+  // 2. We skip complex image replacing logic for simplicity, but we can insert new images
+  if (data.images && data.images.length > 0 && !data.keepExistingImages) {
+    // Delete old images
+    await supabase.from("product_images").delete().eq("product_id", id);
+    
+    // Insert new images
+    const imagesToInsert = data.images.map((url: string) => ({
+      product_id: id,
+      image_url: url,
+    }));
+    
+    const { error: imageError } = await supabase.from("product_images").insert(imagesToInsert);
+    if (imageError) console.error("Error inserting images:", imageError);
+  }
+
+  revalidatePath(`/admin/products`);
+  return { success: true };
+}

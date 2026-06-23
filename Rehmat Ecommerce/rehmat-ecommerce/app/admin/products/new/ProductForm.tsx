@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createProductRecord } from "@/app/actions/products";
+import { createProductRecord, updateProductRecord } from "@/app/actions/products";
 import { UploadCloud, X } from "lucide-react";
 import Image from "next/image";
 
@@ -19,19 +19,40 @@ const productSchema = z.object({
 
 type ProductFormData = z.infer<typeof productSchema>;
 
-export default function ProductForm({ categories }: { categories: any[] }) {
+export default function ProductForm({ categories, initialData }: { categories: any[], initialData?: any }) {
   const router = useRouter();
   const [images, setImages] = useState<File[]>([]);
-  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>([]);
+  
+  // Try to load initial images from DB
+  let initialImages: string[] = [];
+  if (initialData?.product_images?.length) {
+    initialImages = initialData.product_images.map((img: any) => img.image_url);
+  } else if (initialData?.featured_image) {
+    initialImages = [initialData.featured_image];
+  }
+  
+  const [imagePreviewUrls, setImagePreviewUrls] = useState<string[]>(initialImages);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
+  const [keepExistingImages, setKeepExistingImages] = useState(!!initialData);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(productSchema),
+    defaultValues: initialData ? {
+      title: initialData.title,
+      description: initialData.description || "",
+      price: initialData.price,
+      stock: initialData.stock,
+      category_id: initialData.category_id,
+    } : undefined
   });
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
+      if (keepExistingImages) {
+        setKeepExistingImages(false); // If they upload new images, we'll overwrite existing ones for simplicity
+        setImagePreviewUrls([]);
+      }
       const filesArray = Array.from(e.target.files);
       setImages(prev => [...prev, ...filesArray]);
       
@@ -44,7 +65,9 @@ export default function ProductForm({ categories }: { categories: any[] }) {
     setImages(prev => prev.filter((_, i) => i !== index));
     setImagePreviewUrls(prev => {
       const newUrls = [...prev];
-      URL.revokeObjectURL(newUrls[index]);
+      if (newUrls[index].startsWith("blob:")) {
+        URL.revokeObjectURL(newUrls[index]);
+      }
       return newUrls.filter((_, i) => i !== index);
     });
   };
@@ -56,7 +79,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
 
       const uploadedUrls: string[] = [];
 
-      // 1. Upload images to Cloudinary
+      // 1. Upload images to Cloudinary (only new File objects)
       for (const file of images) {
         const formData = new FormData();
         formData.append("file", file);
@@ -73,12 +96,20 @@ export default function ProductForm({ categories }: { categories: any[] }) {
       }
 
       // 2. Save product to database
-      const res = await createProductRecord({
-        ...data,
-        images: uploadedUrls
-      });
-
-      if (res.error) throw new Error(res.error);
+      if (initialData) {
+        const res = await updateProductRecord(initialData.id, {
+          ...data,
+          images: keepExistingImages ? imagePreviewUrls : uploadedUrls,
+          keepExistingImages
+        });
+        if (res.error) throw new Error(res.error);
+      } else {
+        const res = await createProductRecord({
+          ...data,
+          images: uploadedUrls
+        });
+        if (res.error) throw new Error(res.error);
+      }
 
       router.push("/admin/products");
     } catch (err: any) {
@@ -89,7 +120,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 max-w-4xl">
-      <h2 className="text-xl font-bold font-inter text-black mb-6">Add New Product</h2>
+      <h2 className="text-xl font-bold font-inter text-black mb-6">{initialData ? "Edit Product" : "Add New Product"}</h2>
       
       {error && <div className="bg-red-50 text-red-500 p-3 rounded-md mb-6 font-poppins text-sm">{error}</div>}
 
@@ -104,7 +135,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
                 className="w-full border border-gray-300 rounded-md p-2.5 font-poppins text-sm focus:outline-none focus:ring-1 focus:ring-red-500" 
                 placeholder="e.g. Wireless Headphones"
               />
-              {errors.title && <span className="text-red-500 text-xs font-poppins">{errors.title.message}</span>}
+              {errors.title && <span className="text-red-500 text-xs font-poppins">{errors.title?.message as string}</span>}
             </div>
 
             <div className="flex flex-col gap-1">
@@ -126,7 +157,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
                   {...register("price")} 
                   className="w-full border border-gray-300 rounded-md p-2.5 font-poppins text-sm focus:outline-none focus:ring-1 focus:ring-red-500" 
                 />
-                {errors.price && <span className="text-red-500 text-xs font-poppins">{errors.price.message}</span>}
+                {errors.price && <span className="text-red-500 text-xs font-poppins">{errors.price?.message as string}</span>}
               </div>
               
               <div className="flex flex-col gap-1">
@@ -136,7 +167,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
                   {...register("stock")} 
                   className="w-full border border-gray-300 rounded-md p-2.5 font-poppins text-sm focus:outline-none focus:ring-1 focus:ring-red-500" 
                 />
-                {errors.stock && <span className="text-red-500 text-xs font-poppins">{errors.stock.message}</span>}
+                {errors.stock && <span className="text-red-500 text-xs font-poppins">{errors.stock?.message as string}</span>}
               </div>
             </div>
 
@@ -151,7 +182,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
-              {errors.category_id && <span className="text-red-500 text-xs font-poppins">{errors.category_id.message}</span>}
+              {errors.category_id && <span className="text-red-500 text-xs font-poppins">{errors.category_id?.message as string}</span>}
             </div>
           </div>
 
@@ -170,6 +201,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
               <UploadCloud className="w-8 h-8 text-gray-400 mb-2" />
               <p className="text-sm font-poppins text-gray-600 font-medium">Click or drag images to upload</p>
               <p className="text-xs font-poppins text-gray-400 mt-1">PNG, JPG, WEBP up to 5MB</p>
+              {initialData && keepExistingImages && <p className="text-xs text-red-500 mt-2 font-poppins">Uploading new images will replace existing ones.</p>}
             </div>
 
             {imagePreviewUrls.length > 0 && (
@@ -209,7 +241,7 @@ export default function ProductForm({ categories }: { categories: any[] }) {
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 Saving...
               </>
-            ) : "Save Product"}
+            ) : initialData ? "Update Product" : "Save Product"}
           </button>
         </div>
       </form>
