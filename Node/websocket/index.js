@@ -1,34 +1,25 @@
-import express from "express";
-import http from "http";
-import { Server } from "socket.io";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import express from "express"
+import http from "http"
+import path from "path"
+import {Server} from "socket.io"
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const app = express()
+const server = http.createServer(app)
+const io = new Server(server) 
 
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+// socket.io
+io.on("connection",(socket)=>{
+    socket.on("user-message",(message)=>{
+        console.log("New user message:",message)
+        socket.broadcast.emit("message",message)
+    })
+})
 
-app.use(express.static(__dirname));
 
-io.on("connection", (socket) => {
-    console.log("A user connected", socket.id);
-
-    socket.on("chat message", (msg) => {
-        io.emit("chat message", msg);
-    });
-
-    socket.on("disconnect", () => {
-        console.log("User disconnected", socket.id);
-    });
-});
-
-app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
-});
-
-server.listen(3000, () => {
-    console.log("listening on *:3000");
-});
+app.use(express.static(path.resolve("./public")))
+app.get("/",(req,res)=>{
+    res.sendFile("./public/index.html")
+})
+server.listen(7000,()=>{
+    console.log("Server started at port 7000")
+})
