@@ -1,28 +1,26 @@
-import express from "express"
-import dotenv from "dotenv"
-import bodyParser from "body-parser"
-import mongoose from "mongoose"
-import route from "./route/userRoute.js"
+import express from "express";
+import dotenv from "dotenv";
+import bodyParser from "body-parser";
+import route from "./routes/userRoute.js";
+import connectDB from "./config/db.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
+dotenv.config();
 
+const app = express();
+app.use(bodyParser.json());
 
-const app = express()
-app.use(bodyParser.json())
-dotenv.config()
-const PORT = process.env.PORT;
-const MONGO_URL = process.env.MONGO_URL || 7000;
+const PORT = process.env.PORT || 8000;
 
-mongoose    
-    .connect(MONGO_URL)
-    .then(() => {
-        console.log("DB connected successfuly")
-        app.listen(PORT,()=>{
-        console.log(`App is running on PORT: ${PORT}`)
-    })
-    })
-    .catch((err) => {
-        console.log(err)
-    })
+// Connect to Database
+connectDB().then(() => {
+    app.listen(PORT, () => {
+        console.log(`App is running on PORT: ${PORT}`);
+    });
+});
 
-    
-app.use("/api",route)
+// Routes
+app.use("/api", route);
+
+// Global Error Handler Middleware (must be after routes)
+app.use(errorHandler);
