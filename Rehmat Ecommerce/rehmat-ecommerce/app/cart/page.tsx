@@ -6,16 +6,26 @@ import Link from "next/link";
 import { ChevronDown, ChevronUp, X, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-function QuantityBox({ value, onChange }: { value: number, onChange: (newVal: number) => void }) {
+function QuantityBox({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (newVal: number) => void;
+}) {
   const increase = () => onChange(value + 1);
   const decrease = () => onChange(value > 1 ? value - 1 : 1);
 
   return (
     <div className="flex h-11 w-16 items-center justify-center gap-3 rounded-sm border border-black/40 font-poppins text-base text-black">
-      <span>{value.toString().padStart(2, '0')}</span>
+      <span>{value.toString().padStart(2, "0")}</span>
       <span className="flex flex-col">
-        <button onClick={increase} className="hover:text-primary"><ChevronUp className="h-4 w-4" /></button>
-        <button onClick={decrease} className="hover:text-primary"><ChevronDown className="h-4 w-4" /></button>
+        <button onClick={increase} className="hover:text-primary">
+          <ChevronUp className="h-4 w-4" />
+        </button>
+        <button onClick={decrease} className="hover:text-primary">
+          <ChevronDown className="h-4 w-4" />
+        </button>
       </span>
     </div>
   );
@@ -33,29 +43,33 @@ export default function CartPage() {
   const fetchCart = () => {
     setLoading(true);
     fetch("/api/cart")
-      .then(res => {
+      .then((res) => {
         if (res.status === 401) {
           window.location.href = "/login";
           throw new Error("Unauthorized");
         }
         return res.json();
       })
-      .then(data => {
+      .then((data) => {
         setCartItems(data.items || []);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Cart fetch error:", err);
         setLoading(false);
       });
   };
 
   const updateQuantity = (id: string, newQuantity: number) => {
-    setCartItems(items => items.map(item => item.id === id ? { ...item, quantity: newQuantity } : item));
+    setCartItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, quantity: newQuantity } : item,
+      ),
+    );
   };
 
   const handleRemove = async (id: string) => {
-    setCartItems(items => items.filter(item => item.id !== id));
+    setCartItems((items) => items.filter((item) => item.id !== id));
     try {
       await fetch(`/api/cart?item_id=${id}`, { method: "DELETE" });
     } catch (err) {
@@ -70,7 +84,9 @@ export default function CartPage() {
       const res = await fetch("/api/cart", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items: cartItems.map(i => ({ id: i.id, quantity: i.quantity })) })
+        body: JSON.stringify({
+          items: cartItems.map((i) => ({ id: i.id, quantity: i.quantity })),
+        }),
       });
       if (res.ok) {
         fetchCart();
@@ -82,29 +98,15 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cartItems.reduce((acc, item) => acc + (Number(item.products?.price || 0) * item.quantity), 0);
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + Number(item.products?.price || 0) * item.quantity,
+    0,
+  );
   const total = subtotal;
 
-  const [checkingOut, setCheckingOut] = useState(false);
-
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (cartItems.length === 0) return;
-    setCheckingOut(true);
-    try {
-      const res = await fetch("/api/checkout", { method: "POST" });
-      if (res.ok) {
-        alert("Order placed successfully with Cash on Delivery!");
-        window.location.href = "/orders"; // Redirect to orders page
-      } else {
-        const data = await res.json();
-        alert(data.error || "Checkout failed");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Checkout failed");
-    } finally {
-      setCheckingOut(false);
-    }
+    window.location.href = "/checkout";
   };
 
   return (
@@ -114,7 +116,10 @@ export default function CartPage() {
       <main className="flex-1">
         <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:py-16 lg:px-8">
           <nav className="mb-14 flex items-center gap-3 font-poppins text-sm">
-            <Link href="/" className="text-black/50 transition-colors hover:text-black">
+            <Link
+              href="/"
+              className="text-black/50 transition-colors hover:text-black"
+            >
               Home
             </Link>
             <span className="text-black/40">/</span>
@@ -140,7 +145,8 @@ export default function CartPage() {
             ) : (
               cartItems.map((item) => {
                 const product = item.products;
-                const itemSubtotal = Number(product?.price || 0) * item.quantity;
+                const itemSubtotal =
+                  Number(product?.price || 0) * item.quantity;
                 return (
                   <article
                     key={item.id}
@@ -150,7 +156,10 @@ export default function CartPage() {
                       <div className="relative flex h-14 w-14 shrink-0 items-center justify-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
-                          src={product?.featured_image || "https://placehold.co/100x100"}
+                          src={
+                            product?.featured_image ||
+                            "https://placehold.co/100x100"
+                          }
                           alt={product?.title || "Product"}
                           className="max-h-12 max-w-12 object-contain mix-blend-multiply"
                         />
@@ -162,7 +171,9 @@ export default function CartPage() {
                           <X className="h-3.5 w-3.5" />
                         </button>
                       </div>
-                      <span className="truncate">{product?.title || "Unknown Product"}</span>
+                      <span className="truncate">
+                        {product?.title || "Unknown Product"}
+                      </span>
                     </div>
 
                     <div className="flex items-center justify-between md:block">
@@ -172,7 +183,10 @@ export default function CartPage() {
 
                     <div className="flex items-center justify-between md:block">
                       <span className="text-black/50 md:hidden">Quantity</span>
-                      <QuantityBox value={item.quantity} onChange={(val) => updateQuantity(item.id, val)} />
+                      <QuantityBox
+                        value={item.quantity}
+                        onChange={(val) => updateQuantity(item.id, val)}
+                      />
                     </div>
 
                     <div className="flex items-center justify-between md:block md:text-right">
@@ -191,7 +205,7 @@ export default function CartPage() {
               >
                 Return To Shop
               </Link>
-              <button 
+              <button
                 onClick={handleUpdateCart}
                 disabled={updating || cartItems.length === 0}
                 className="w-fit rounded-sm border border-black/50 px-12 py-4 font-poppins text-base font-medium text-black transition-colors hover:border-primary hover:text-primary disabled:opacity-50 flex gap-2 items-center"
@@ -234,13 +248,12 @@ export default function CartPage() {
               </div>
 
               <div className="mt-4 flex justify-center">
-                <button 
+                <button
                   onClick={handleCheckout}
-                  disabled={checkingOut || cartItems.length === 0}
-                  className="rounded-sm bg-primary px-12 py-4 font-poppins text-base font-medium text-neutral-50 transition-colors hover:bg-red-600 disabled:opacity-50 flex gap-2 items-center"
+                  disabled={cartItems.length === 0}
+                  className="rounded-sm bg-primary px-12 py-4 font-poppins text-base font-medium text-neutral-50 transition-colors hover:bg-red-600 disabled:opacity-50"
                 >
-                  {checkingOut ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
-                  Process to checkout
+                  Proceed to Checkout
                 </button>
               </div>
             </aside>
