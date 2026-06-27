@@ -34,7 +34,7 @@ export const sendEmail = async (req, res) => {
   }
 };
 
-const storedOtp = null;
+let storedOtp = null;
 
 export const sendOtp = async(req,res)=>{
     try {
@@ -75,7 +75,7 @@ export const sendOtp = async(req,res)=>{
 
 
 
-const verifyOtp = async()=>{
+export const verifyOtp = async(req,res)=>{
     try {
         const {otp} = req.body
 
@@ -86,7 +86,10 @@ const verifyOtp = async()=>{
             })
         }
     } catch (error) {
-        
+        return res.status(500).json({
+                success : false , 
+                message : "Otp incorrect"
+            })
     }
 }
 
