@@ -14,7 +14,7 @@ export default function SectionHeading({ subtitle, title, actionButton, children
           {subtitle}
         </span>
       </div>
-      
+
       {(title || actionButton || children) && (
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end lg:gap-20">

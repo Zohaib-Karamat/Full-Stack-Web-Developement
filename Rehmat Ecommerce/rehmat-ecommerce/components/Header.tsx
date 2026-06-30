@@ -69,7 +69,7 @@ export default function Header() {
                 <button aria-label="User Account" className="flex items-center justify-center w-8 h-8 rounded-full bg-red-500 text-white hover:bg-red-600 transition-colors">
                   <User className="w-5 h-5" />
                 </button>
-                
+
                 {/* Invisible hover bridge */}
                 <div className="absolute top-full right-0 w-full h-4"></div>
 
@@ -94,8 +94,8 @@ export default function Header() {
               </div>
             )}
 
-            <button 
-              aria-label="Menu" 
+            <button
+              aria-label="Menu"
               className="md:hidden"
               onClick={() => setIsMobileMenuOpen(true)}
             >
@@ -120,14 +120,14 @@ export default function Header() {
           <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-xl flex flex-col transform transition-transform duration-300 ease-in-out">
             <div className="flex items-center justify-between p-4 border-b border-gray-200">
               <span className="font-inter font-semibold text-xl">Menu</span>
-              <button 
+              <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <X className="w-6 h-6 text-black" />
               </button>
             </div>
-            
+
             <nav className="flex flex-col p-4 gap-4 font-poppins text-base font-medium">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Home</Link>
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-red-500 transition-colors">Contact</Link>

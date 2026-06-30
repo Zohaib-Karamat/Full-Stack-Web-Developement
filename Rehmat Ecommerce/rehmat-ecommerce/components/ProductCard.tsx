@@ -65,7 +65,7 @@ export default function ProductCard({
         />
 
         {/* Add to Cart Button (Hover) */}
-        <AddToCartButton 
+        <AddToCartButton
           productId={id}
           className="absolute bottom-0 w-full bg-black py-2 text-center font-poppins font-medium text-white opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100"
         />
@@ -75,7 +75,7 @@ export default function ProductCard({
       <div className="flex flex-col gap-2">
         <Link href={href} className="text-black transition-colors hover:text-red-500">
           <h3 className="font-poppins font-medium text-base truncate">
-          {title}
+            {title}
           </h3>
         </Link>
         <div className="flex items-center gap-3 font-poppins font-medium text-base">
